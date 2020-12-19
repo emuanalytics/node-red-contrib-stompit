@@ -1,0 +1,170 @@
+<script type="text/x-red" data-template-name="emu-stomp-in">
+  <div class="form-row">
+      <label for="node-input-server" style="width: 110px;"><i class="fa fa-bookmark"></i> Server</label>
+      <input type="text" id="node-input-server">
+  </div>
+  <div class="form-row">
+      <label for="node-input-topic" style="width: 110px;"><i class="fa fa-envelope"></i> Destination</label>
+      <input type="text" id="node-input-topic" placeholder="topic or queue">
+  </div>
+  <div class="form-row">
+    <label for="node-input-encoding"><i class="fa fa-sign-out"></i> Output</label>
+    <select id="node-input-encoding">
+      <option value="string"> a String</option>
+      <option value="buffer"> a Buffer</option>
+      <option value="json"> a parsed JSON object</option>
+    </select>
+  </div>
+  <div class="form-row">
+      <label for="node-input-name" style="width: 110px;"><i class="fa fa-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+</script>
+
+<script type="text/x-red" data-help-name="emu-stomp-in">
+  <p>Connects to a server using the Stomp protocol to receive messages.</p>
+  <p>The Node.js <a href="https://www.npmjs.com/package/stompit">stompit</a> client library is used.</p>
+  <p><code>msg.payload</code> will be parsed into an
+  object if JSON output is selected.</p>
+  <p><code>msg.headers</code> contains any header information that was also delivered.</p>
+  <p><code>msg.topic</code> is set to the predefined subscription topic.</p>
+  <p><b>Note</b>: While not a requirement of the Stomp protocol, if connecting to an ActiveMQ server, the destination should
+  begin with <i>"/queue/"</i> or with <i>"/topic/"</i>. See
+  <a href="https://stomp.github.io/stomp-specification-1.0.html#frame-SEND" target="new">Stomp 1.0 spec</a>
+  for more details.</p>
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType('emu-stomp-in', {
+    category: 'stream studio',
+    paletteLabel: 'stomp in',
+    color: '#e8cfe8',
+    defaults: {
+      name: { value: '' },
+      server: { type: 'emu-stomp-server', required: true },
+      topic: { value: '', required: true },
+      encoding: { value: 'string' },
+    },
+    inputs: 0,
+    outputs: 1,
+    icon: 'bridge.png',
+    oneditprepare: function () {
+      if (this.encoding === undefined) {
+        $('#node-input-encoding').val('string');
+      }
+    },
+    label: function () {
+      return this.name || 'stomp';
+    },
+    labelStyle: function () {
+      return this.name ? 'node_label_italic' : '';
+    },
+  });
+</script>
+
+<script type="text/x-red" data-template-name="emu-stomp-out">
+  <div class="form-row">
+      <label for="node-input-server" style="width: 110px;"><i class="fa fa-bookmark"></i> Server</label>
+      <input type="text" id="node-input-server">
+  </div>
+  <div class="form-row">
+      <label for="node-input-topic" style="width: 110px;"><i class="fa fa-envelope"></i> Destination</label>
+      <input type="text" id="node-input-topic" placeholder="topic or queue">
+  </div>
+  <div class="form-row">
+    <label for="node-input-name" style="width: 110px;"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-tips">The <b>Destination</b> field is optional. If not set uses the <code>msg.topic</code>
+  property of the message.</div>
+</script>
+
+<script type="text/x-red" data-help-name="emu-stomp-out">
+  <p>Connects to an Stomp-capable server to send messages.</p>
+  <p>The Node.js <a href="https://www.npmjs.com/package/stompit">stompit</a> client library is used.</p>
+  <p>The <b>Destination</b> field is optional. If set it overrides the <code>msg.topic</code>
+  property of the message.</p>
+  <p><code>msg.headers</code></code>, if set, should be an object containing field/value
+      pairs to be added as request headers.</p>
+  <p><b>Note</b>: While not a requirement of the Stomp protocol, if connecting
+  to an ActiveMQ server, the destination should
+  begin with <i>"/queue/"</i> or with <i>"/topic/"</i>. See the
+  <a href="https://stomp.github.io/stomp-specification-1.0.html#frame-SEND" target="new">Stomp 1.0 spec</a>
+  for more details.</p>
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType('emu-stomp-out', {
+    category: 'stream studio',
+    paletteLabel: 'stomp out',
+    color: '#e8cfe8',
+    defaults: {
+      name: { value: '' },
+      server: { type: 'emu-stomp-server', required: true },
+      topic: { value: '' },
+    },
+    inputs: 1,
+    outputs: 0,
+    icon: 'bridge.png',
+    align: 'right',
+    label: function () {
+      return this.name || 'stomp';
+    },
+    labelStyle: function () {
+      return this.name ? 'node_label_italic' : '';
+    },
+  });
+</script>
+
+<script type="text/x-red" data-template-name="emu-stomp-server">
+  <div class="form-row">
+    <label for="node-config-input-name" style="width: 110px;"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-config-input-name" placeholder="Name">
+  </div>
+  <div class="form-row node-input-server">
+      <label for="node-config-input-server"><i class="fa fa-bookmark"></i> Server</label>
+      <input class="input-append-left" type="text" id="node-config-input-server" placeholder="localhost" style="width: 45%;" >
+      <label for="node-config-input-port" style="margin-left: 10px; width: 35px; "> Port</label>
+      <input type="text" id="node-config-input-port" placeholder="Port" style="width:60px">
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-vhost"><i class="fa fa-user"></i> VHOST</label>
+    <input type="text" id="node-config-input-vhost">
+  </div>
+  <div class="form-row">
+      <label for="node-config-input-user"><i class="fa fa-user"></i> Username</label>
+      <input type="text" id="node-config-input-user">
+  </div>
+  <div class="form-row">
+      <label for="node-config-input-pass"><i class="fa fa-lock"></i> Password</label>
+      <input type="password" id="node-config-input-password">
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-heatbeat"><i class="fa fa-heart"></i> Heartbeat</label>
+    <input type="text" id="node-config-input-heartbeat">
+  </div>
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType('emu-stomp-server', {
+    category: 'config',
+    defaults: {
+      server: { required: true },
+      port: { value: 61613, required: true, validate: RED.validators.number() },
+      vhost: { value: '/' },
+      heartbeat: { value: '5000,5000', required: true },
+      encoding: { value: 'text' },
+      name: {},
+    },
+    credentials: {
+      user: { type: 'text' },
+      password: { type: 'password' },
+    },
+    label: function () {
+      return this.name ? this.name : this.server + ':' + this.port;
+    },
+    labelStyle: function () {
+      return this.name ? 'node_label_italic' : '';
+    },
+  });
+</script>

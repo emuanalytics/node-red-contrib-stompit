@@ -1,0 +1,28 @@
+{
+  "name": "@emuanalytics/node-red-contrib-stompit",
+  "version": "0.0.2",
+  "description": "A Node-RED node to publish and subscribe to/from a Stomp server using the stompit client library",
+  "dependencies": {
+    "stompit": "github:emuanalytics/stompit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/emuanalytics/node-red-contrib-stompit"
+  },
+  "license": "Apache-2.0",
+  "keywords": [
+    "node-red",
+    "stomp",
+    "stompit"
+  ],
+  "node-red": {
+    "nodes": {
+      "emu-stomp": "stomp.js"
+    }
+  },
+  "author": {
+    "name": "Robin Summerhill",
+    "email": "robin.summerhill@emu-analytics.com",
+    "url": "https://emu-analytics.com"
+  }
+}
